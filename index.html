@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise 🎂</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #352052, #100d20 70%);
+  color: white;
+}
+
+.container {
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+}
+
+h1 {
+  font-size: clamp(28px, 7vw, 42px);
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #ff9fd8, #ffd0f0);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  color: #d8cce8;
+  margin-bottom: 30px;
+  font-size: 15px;
+}
+
+.cake-area {
+  position: relative;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 25px;
+}
+
+.cake {
+  position: relative;
+  width: 270px;
+  height: 190px;
+  transform: perspective(700px) rotateX(3deg);
+  filter: drop-shadow(0 20px 20px rgba(0,0,0,0.4));
+}
+
+.layer {
+  position: absolute;
+  left: 0;
+  width: 270px;
+  height: 65px;
+  border-radius: 50%;
+  background: linear-gradient(#ffb3d9, #ed75ae);
+  border: 3px solid #ffd5e9;
+  box-shadow: inset 0 -12px 0 rgba(170,45,110,0.15);
+}
+
+.layer::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: -3px;
+  width: 270px;
+  height: 45px;
+  background: linear-gradient(#f58bc0, #c64e91);
+  border-radius: 0 0 50% 50%;
+  border: 3px solid #ffd5e9;
+  z-index: -1;
+}
+
+.bottom {
+  bottom: 0;
+}
+
+.middle {
+  bottom: 55px;
+  transform: scale(0.88);
+}
+
+.top {
+  bottom: 110px;
+  transform: scale(0.75);
+}
+
+.cream {
+  position: absolute;
+  width: 100%;
+  height: 15px;
+  top: 22px;
+  background: #fff0f8;
+  border-radius: 50%;
+}
+
+.cherry {
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  background: #ff315f;
+  border-radius: 50%;
+  top: 12px;
+  box-shadow: inset -4px -3px 0 #c91c48;
+}
+
+.cherry:nth-child(1) { left: 35px; }
+.cherry:nth-child(2) { left: 125px; }
+.cherry:nth-child(3) { left: 215px; }
+
+.candle {
+  position: absolute;
+  bottom: 166px;
+  width: 15px;
+  height: 65px;
+  border-radius: 5px 5px 2px 2px;
+  background: repeating-linear-gradient(
+    135deg,
+    #fff,
+    #fff 7px,
+    #b9a1ff 7px,
+    #b9a1ff 14px
+  );
+  z-index: 5;
+}
+
+.candle:nth-child(1) { left: 65px; }
+.candle:nth-child(2) { left: 128px; }
+.candle:nth-child(3) { left: 191px; }
+
+.wick {
+  position: absolute;
+  top: -8px;
+  left: 6px;
+  width: 3px;
+  height: 10px;
+  background: #222;
+}
+
+.flame {
+  position: absolute;
+  top: -36px;
+  left: -4px;
+  width: 23px;
+  height: 34px;
+  border-radius: 50% 50% 50% 50%;
+  background: linear-gradient(#fff6a0, #ff9d00, #ff4b00);
+  box-shadow: 0 0 20px #ff9d00;
+  animation: flicker 0.18s infinite alternate;
+  transform-origin: bottom;
+}
+
+@keyframes flicker {
+  from { transform: scale(1) rotate(-3deg); }
+  to { transform: scale(1.12) rotate(3deg); }
+}
+
+.flame.off {
+  display: none;
+}
+
+button {
+  border: none;
+  border-radius: 30px;
+  padding: 15px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #ff65b5, #9c65ff);
+  box-shadow: 0 8px 20px rgba(156,101,255,0.3);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+button:disabled {
+  opacity: 0.6;
+}
+
+#status {
+  margin-top: 18px;
+  font-size: 14px;
+  color: #d9c9ee;
+  min-height: 20px;
+}
+
+#message {
+  display: none;
+  margin-top: 20px;
+  animation: appear 1s ease;
+}
+
+#message h2 {
+  font-size: 28px;
+  color: #ffd1ec;
+  margin-bottom: 10px;
+}
+
+#message p {
+  color: #e5d7f3;
+  line-height: 1.6;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.confetti {
+  position: fixed;
+  top: -20px;
+  width: 8px;
+  height: 14px;
+  animation: fall 3s linear forwards;
+  pointer-events: none;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+  }
+}
+
+@media (max-width: 380px) {
+  .cake {
+    transform: scale(0.85);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>Happy Birthday! 🎂</h1>
+  <p class="subtitle">Make a wish and blow out the candles ✨</p>
+
+  <div class="cake-area">
+
+    <div class="cake">
+
+      <div class="candle">
+        <div class="wick"></div>
+        <div class="flame"></div>
+      </div>
+
+      <div class="candle">
+        <div class="wick"></div>
+        <div class="flame"></div>
+      </div>
+
+      <div class="candle">
+        <div class="wick"></div>
+        <div class="flame"></div>
+      </div>
+
+      <div class="layer bottom">
+        <div class="cream"></div>
+      </div>
+
+      <div class="layer middle">
+        <div class="cream"></div>
+      </div>
+
+      <div class="layer top">
+        <div class="cream"></div>
+        <div class="cherry"></div>
+        <div class="cherry"></div>
+        <div class="cherry"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <button id="blowButton">🎤 Blow Out Candles</button>
+
+  <p id="status">Tap the button and blow into your microphone.</p>
+
+  <div id="message">
+    <h2>Wish Granted! 🎉</h2>
+    <p>May your birthday be filled with happiness, love and beautiful memories.</p>
+  </div>
+
+</div>
+
+<script>
+const button = document.getElementById("blowButton");
+const statusText = document.getElementById("status");
+const message = document.getElementById("message");
+const flames = document.querySelectorAll(".flame");
+
+let audioContext;
+let analyser;
+let microphone;
+let animationId;
+let blown = false;
+
+function celebrate() {
+  if (blown) return;
+
+  blown = true;
+
+  flames.forEach(flame => {
+    flame.classList.add("off");
+  });
+
+  button.disabled = true;
+  button.textContent = "🎉 Candles Blown Out!";
+  statusText.textContent = "Your wish has been sent into the universe ✨";
+  message.style.display = "block";
+
+  createConfetti();
+}
+
+function createConfetti() {
+  for (let i = 0; i < 70; i++) {
+    const piece = document.createElement("div");
+    piece.className = "confetti";
+
+    piece.style.left = Math.random() * 100 + "vw";
+    piece.style.background = [
+      "#ff65b5",
+      "#ffd166",
+      "#8ecae6",
+      "#b8f2e6",
+      "#c77dff"
+    ][Math.floor(Math.random() * 5)];
+
+    piece.style.animationDelay = Math.random() * 1.5 + "s";
+
+    document.body.appendChild(piece);
+
+    setTimeout(() => piece.remove(), 5000);
+  }
+}
+
+async function startMicrophone() {
+  if (blown) return;
+
+  try {
+    statusText.textContent = "Allow microphone access, then blow!";
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: true
+    });
+
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 256;
+
+    microphone = audioContext.createMediaStreamSource(stream);
+    microphone.connect(analyser);
+
+    const data = new Uint8Array(analyser.fftSize);
+
+    function detectBlow() {
+      if (blown) return;
+
+      analyser.getByteTimeDomainData(data);
+
+      let sum = 0;
+
+      for (let i = 0; i < data.length; i++) {
+        const value = (data[i] - 128) / 128;
+        sum += value * value;
+      }
+
+      const volume = Math.sqrt(sum / data.length);
+
+      if (volume > 0.18) {
+        celebrate();
+
+        stream.getTracks().forEach(track => track.stop());
+
+        if (audioContext) {
+          audioContext.close();
+        }
+
+        return;
+      }
+
+      animationId = requestAnimationFrame(detectBlow);
+    }
+
+    detectBlow();
+
+  } catch (error) {
+    statusText.textContent = "Microphone unavailable. Tap the button again to blow the candles.";
+    button.textContent = "🕯️ Tap to Blow Out";
+    button.onclick = celebrate;
+  }
+}
+
+button.addEventListener("click", startMicrophone);
+</script>
+
+</body>
+</html>
